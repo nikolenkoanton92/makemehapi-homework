@@ -2,8 +2,10 @@ var Hapi = require('hapi');
 var Inert = require('inert');
 var Vision = require('vision');
 var H2o2 = require('h2o2');
+var Rot13 = require('rot13-transform');
 var server = new Hapi.Server();
 var Path = require('path');
+var Fs = require('fs');
 
 server.connection({
   host: 'localhost',
@@ -38,6 +40,17 @@ server.route({
   method: 'GET',
   handler: {
     view: 'index.html'
+  }
+});
+
+server.route({
+  path: '/stream',
+  method: 'GET',
+  config: {
+    handler: function(request, reply) {
+      var fileStream = Fs.createReadStream(Path.join(__dirname, 'index.txt'));
+      reply(fileStream.pipe(Rot13()));
+    }
   }
 });
 

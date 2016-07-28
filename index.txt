@@ -1,0 +1,1 @@
+Hapijs exersice 8, stream.
