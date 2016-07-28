@@ -1,5 +1,6 @@
 var Hapi = require('hapi');
 var Inert = require('inert');
+var Vision = require('vision');
 var server = new Hapi.Server();
 var Path = require('path');
 
@@ -13,11 +14,23 @@ server.register(Inert, function(err) {
     throw err;
 });
 
+server.register(Vision, function(err) {
+  if (err)
+    throw err;
+});
+
+server.views({
+  engines: {
+    html: require('handlebars')
+  },
+  path: Path.join(__dirname, 'templates')
+});
+
 server.route({
   path: '/',
   method: 'GET',
   handler: {
-    file: Path.join(__dirname, 'index.html')
+    view: 'index.html'
   }
 });
 
