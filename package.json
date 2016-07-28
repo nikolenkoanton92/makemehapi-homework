@@ -1,0 +1,22 @@
+{
+  "name": "makemehapi-homework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikolenkoanton92/makemehapi-homework.git"
+  },
+  "author": "Anton Nikoleno <nikolenkoanton92@gmail.com> (http://antonnikolenko.com/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nikolenkoanton92/makemehapi-homework/issues"
+  },
+  "homepage": "https://github.com/nikolenkoanton92/makemehapi-homework#readme",
+  "dependencies": {
+    "hapi": "^13.5.0"
+  }
+}
