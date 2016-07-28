@@ -1,12 +1,18 @@
 var Hapi = require('hapi');
 var Inert = require('inert');
 var Vision = require('vision');
+var H2o2 = require('h2o2');
 var server = new Hapi.Server();
 var Path = require('path');
 
 server.connection({
   host: 'localhost',
   port: Number(process.argv[2] || 8080)
+});
+
+server.register(H2o2, function(err) {
+  if (err)
+    throw err;
 });
 
 server.register(Inert, function(err) {
@@ -31,6 +37,17 @@ server.route({
   method: 'GET',
   handler: {
     view: 'index.html'
+  }
+});
+
+server.route({
+  path: '/proxy',
+  method: 'GET',
+  handler: {
+    proxy: {
+      host: '127.0.0.1',
+      port: 65535
+    }
   }
 });
 
