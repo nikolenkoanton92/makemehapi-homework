@@ -3,6 +3,7 @@ var Inert = require('inert');
 var Vision = require('vision');
 var H2o2 = require('h2o2');
 var Rot13 = require('rot13-transform');
+var Joi = require('joi');
 var server = new Hapi.Server();
 var Path = require('path');
 var Fs = require('fs');
@@ -61,6 +62,21 @@ server.route({
     proxy: {
       host: '127.0.0.1',
       port: 65535
+    }
+  }
+});
+
+server.route({
+  path: '/chickens/{breed}',
+  method: 'GET',
+  handler: function(request, reply) {
+    reply('Chikens params ' + request.params.breed);
+  },
+  config: {
+    validate: {
+      params: {
+        breed: Joi.string().required()
+      }
     }
   }
 });
