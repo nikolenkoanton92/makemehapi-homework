@@ -5,9 +5,30 @@ var H2o2 = require('h2o2');
 var Rot13 = require('rot13-transform');
 var Joi = require('joi');
 var Boom = require('boom');
+var HapiAuthBasic = require('hapi-auth-basic');
 var server = new Hapi.Server();
 var Path = require('path');
 var Fs = require('fs');
+
+var users = {
+  hapi: {
+    username: 'hapi',
+    password: 'auth',
+    id: 'ho1me2work'
+  }
+};
+
+var validate = function(request, username, password, cb) {
+  var user = users[username];
+
+  if (!user)
+    return cb(null, false);
+
+  var isValid = user.password === password ? true : false;
+
+  return cb(null, isValid);
+
+};
 
 server.connection({
   host: 'localhost',
@@ -28,6 +49,26 @@ server.register(Vision, function(err) {
   if (err)
     throw err;
 });
+
+server.register(HapiAuthBasic, function(err) {
+  if (err)
+    throw err;
+
+  server.auth.strategy('simple', 'basic', {
+    validateFunc: validate
+  });
+  server.route({
+    method: 'GET',
+    path: '/dashboard',
+    config: {
+      auth: 'simple',
+      handler: function(request, reply) {
+        reply();
+      }
+    }
+  });
+});
+
 
 server.state('session', {
   domain: 'localhost',
