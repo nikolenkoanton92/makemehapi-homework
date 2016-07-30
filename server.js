@@ -4,6 +4,7 @@ var Vision = require('vision');
 var H2o2 = require('h2o2');
 var Rot13 = require('rot13-transform');
 var Joi = require('joi');
+var Boom = require('boom');
 var server = new Hapi.Server();
 var Path = require('path');
 var Fs = require('fs');
@@ -26,6 +27,13 @@ server.register(Inert, function(err) {
 server.register(Vision, function(err) {
   if (err)
     throw err;
+});
+
+server.state('session', {
+  domain: 'localhost',
+  path: '/',
+  encoding: 'base64json',
+  ttl: 10000
 });
 
 server.views({
@@ -131,6 +139,49 @@ server.route({
     output: 'stream',
     parse: true,
     allow: 'multipart/form-data'
+  }
+});
+
+server.route({
+  path: '/set-cookie',
+  method: 'GET',
+  handler: function(request, reply) {
+    var session = {
+      key: 'makemehapi'
+    };
+    reply('success').state('session', session);
+  },
+  config: {
+    state: {
+      parse: true,
+      failAction: 'log'
+    }
+  }
+});
+
+server.route({
+  path: '/check-cookie',
+  method: 'GET',
+  handler: function(request, reply) {
+    var session = request.state.session;
+    var data;
+
+    if (session) {
+      data = {
+        user: 'nikolenkoanton92'
+      };
+    } else {
+      data = Boom.unauthorized('Missing authentication');
+    }
+
+    reply(data);
+
+  },
+  config: {
+    state: {
+      parse: true,
+      failAction: 'log'
+    }
   }
 });
 

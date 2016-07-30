@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/nikolenkoanton92/makemehapi-homework#readme",
   "dependencies": {
+    "boom": "^3.2.2",
     "h2o2": "^5.1.0",
     "handlebars": "^4.0.5",
     "hapi": "^13.5.0",
