@@ -82,6 +82,29 @@ server.route({
 });
 
 server.route({
+  path: '/login',
+  method: 'POST',
+  handler: function(request, reply) {
+    reply('success login');
+  },
+  config: {
+    validate: {
+      payload: Joi.object({
+        isGuest: Joi.boolean().required(),
+        username: Joi.string().when('isGuest', {
+          is: false,
+          then: Joi.required()
+        }),
+        accessToken: Joi.alphanumeric(),
+        password: Joi.alphanumeric()
+      }).options({
+        allUnknown: true
+      }).without('password', 'accessToken')
+    }
+  }
+});
+
+server.route({
   path: '/foo/bar/baz/{filename}',
   method: 'GET',
   handler: {
