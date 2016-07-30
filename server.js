@@ -105,6 +105,36 @@ server.route({
 });
 
 server.route({
+  path: '/upload',
+  method: 'POST',
+  handler: function(request, reply) {
+    var body = '';
+
+    request.payload.file.on('data', function(data) {
+      body += data;
+    });
+
+    request.payload.file.on('end', function() {
+      var result = {
+        description: request.payload.description,
+        file: {
+          data: body,
+          filename: request.payload.file.hapi.filename,
+          headers: request.payload.file.hapi.headers
+        }
+      };
+
+      reply(JSON.stringify(result));
+    });
+  },
+  payload: {
+    output: 'stream',
+    parse: true,
+    allow: 'multipart/form-data'
+  }
+});
+
+server.route({
   path: '/foo/bar/baz/{filename}',
   method: 'GET',
   handler: {
