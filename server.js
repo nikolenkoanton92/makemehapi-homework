@@ -144,10 +144,10 @@ server.route({
           is: false,
           then: Joi.required()
         }),
-        accessToken: Joi.alphanumeric(),
-        password: Joi.alphanumeric()
+        accessToken: Joi.string().alphanum(),
+        password: Joi.string().alphanum()
       }).options({
-        allUnknown: true
+        allowUnknown: true
       }).without('password', 'accessToken')
     }
   }
@@ -176,13 +176,16 @@ server.route({
       reply(JSON.stringify(result));
     });
   },
-  payload: {
-    output: 'stream',
-    parse: true,
-    allow: 'multipart/form-data'
+  config: {
+    payload: {
+      output: 'stream',
+      parse: true,
+      allow: 'multipart/form-data'
+    }
   }
 });
 
+server.route({
 server.route({
   path: '/set-cookie',
   method: 'GET',
